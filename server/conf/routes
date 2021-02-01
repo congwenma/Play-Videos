@@ -24,6 +24,9 @@ GET     /validateLoginGet     controllers.TaskList1.validateLoginGet(username, p
 
 +nocsrf
 POST    /validatePost     controllers.TaskList1.validatePost
++nocsrf
+POST    /createUser     controllers.TaskList1.createUser
+
 
 
 

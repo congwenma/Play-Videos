@@ -27,3 +27,6 @@ https://www.youtube.com/playlist?list=PLLMXbkbDbVt8tBiGc1y69BZdG8at1D7ZF
 
 - To escape `Option[]`, use `.map`
 
+
+
+- To use CSRF, we need to `implicit request` in the view, which removes need to pass `request` to `view`.

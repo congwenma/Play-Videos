@@ -2,10 +2,19 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 import models.TaskListInMemoryModel
-import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.mvc.{
+  AbstractController,
+  AnyContent,
+  ControllerComponents,
+  Request
+}
 @Singleton
 class TaskList1 @Inject()(cc: ControllerComponents)
     extends AbstractController(cc) {
+
+  private def currentLoggedInUserFromRequest(
+      request: Request[AnyContent]): String =
+    request.session.get("sess").getOrElse("")
 
   def taskList() = Action { request =>
     val usernameOpt = request.session.get("sess")
@@ -15,15 +24,16 @@ class TaskList1 @Inject()(cc: ControllerComponents)
         println(s"*** Logged in user: $username")
 
         val tasks = TaskListInMemoryModel.getTasks(username)
-        Ok(views.html.taskList1(tasks))
+        Ok(views.html.taskList1(tasks, currentLoggedInUserFromRequest(request)))
       }
       .getOrElse(Redirect(routes.TaskList1.login()))
 
   }
 
-  def login = Action {
+  //  The `implicit` helps the XSRF token in `login.scala.html`
+  def login = Action { implicit request =>
     val users = TaskListInMemoryModel.users.keys.toSeq;
-    Ok(views.html.login(users))
+    Ok(views.html.login(users, currentLoggedInUserFromRequest(request)))
   }
 
   def logout = Action {

@@ -1,9 +1,10 @@
-@(users: Seq[String])
+@(users: Seq[String], currentLoggedInUser: String)(implicit request: RequestHeader)
 
 
 @main("Login") {
   <h2>Login w/ GET</h2>
-  <form method="POST" action="validateLoginGet">
+  <form method="GET" action="validateLoginGet">
+    @helper.CSRF.formField
     Username: <input name="username"/>
     Password: <input type="password" name="password"/>
 
@@ -12,6 +13,7 @@
 
   <h2>Login w/ POST</h2>
   <form method="POST" action="validatePost">
+    @helper.CSRF.formField
     Username: <input name="username"/>
     Password: <input type="password" name="password"/>
 
@@ -20,6 +22,7 @@
 
   <h2>Create User</h2>
   <form method="POST" action="createUser">
+    @helper.CSRF.formField
     Username: <input name="username"/>
     Password: <input type="password" name="password"/>
 
@@ -28,6 +31,7 @@
 
 
   <h2>Admin login:</h2>
+  <h3>Currently Logged in as: @currentLoggedInUser</h3>
   <ul>
     @for(username <- users) {
       <a href="/loginAs/@username"><li>@username</li></a>

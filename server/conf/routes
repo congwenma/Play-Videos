@@ -22,9 +22,9 @@ GET     /login              controllers.TaskList1.login
 GET     /tasklist1          controllers.TaskList1.taskList
 GET     /validateLoginGet     controllers.TaskList1.validateLoginGet(username, password)
 
-+nocsrf
+
 POST    /validatePost     controllers.TaskList1.validatePost
-+nocsrf
+
 POST    /createUser     controllers.TaskList1.createUser
 
 GET    /loginAs/:username     controllers.TaskList1.loginAs(username)

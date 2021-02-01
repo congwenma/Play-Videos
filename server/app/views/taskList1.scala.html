@@ -1,4 +1,4 @@
-@(tasks: Seq[String])
+@(tasks: Seq[String], currentLoggedInUser: String)
 
 
 @main("Task List") {
@@ -9,5 +9,6 @@
         }
     </ul>
 
+    <h3>Currently Logged in as: @currentLoggedInUser</h3>
     <a href="/logout">Logout</a>
 }

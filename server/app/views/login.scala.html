@@ -1,4 +1,4 @@
-@()
+@(users: Seq[String])
 
 
 @main("Login") {
@@ -25,4 +25,12 @@
 
     <button>Submit</button>
   </form>
+
+
+  <h2>Admin login:</h2>
+  <ul>
+    @for(username <- users) {
+      <a href="/loginAs/@username"><li>@username</li></a>
+    }
+  </ul>
 }

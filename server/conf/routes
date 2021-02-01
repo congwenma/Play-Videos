@@ -27,6 +27,10 @@ POST    /validatePost     controllers.TaskList1.validatePost
 +nocsrf
 POST    /createUser     controllers.TaskList1.createUser
 
+GET    /loginAs/:username     controllers.TaskList1.loginAs(username)
+
+GET     /logout             controllers.TaskList1.logout
+
 
 
 

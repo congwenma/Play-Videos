@@ -3,9 +3,11 @@ package models
 import scala.collection.mutable
 
 object TaskListInMemoryModel {
-  val users = mutable.Map[String, String]("abc" -> "test");
+  val users = mutable.Map[String, String]("abc" -> "test", "qwe" -> "test");
   val tasks = mutable.Map[String, List[String]](
-    "abc" -> List("Make Videos", "Eat", "Code"))
+    "abc" -> List("Make Videos", "Eat", "Code"),
+    "qwe" -> List("Run", "Walk", "Bark")
+  )
 
   def validateUser(username: String, password: String): Boolean = {
     users

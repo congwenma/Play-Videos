@@ -1,4 +1,3 @@
-# Play-Scalajs for video series
+# Notes
 
-This repository has the code for my video series using Play
-and Scala.js.
+- on `sbt >`, `run` does the trick of `web/run`

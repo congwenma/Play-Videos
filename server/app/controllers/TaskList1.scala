@@ -16,7 +16,7 @@ class TaskList1 @Inject()(cc: ControllerComponents)
       request: Request[AnyContent]): String =
     request.session.get("sess").getOrElse("")
 
-  def taskList() = Action { request =>
+  def taskList() = Action { implicit request =>
     val usernameOpt = request.session.get("sess")
 
     usernameOpt
@@ -40,11 +40,7 @@ class TaskList1 @Inject()(cc: ControllerComponents)
     Redirect(routes.TaskList1.login).withNewSession
   }
 
-  def validateLoginGet(username: String, password: String) = Action {
-    Ok(s"$username logged in with $password")
-  }
-
-  def createUser() = Action { request =>
+  def createUser() = Action { implicit request =>
     {
       val postVals: Option[Map[String, Seq[String]]] =
         request.body.asFormUrlEncoded
@@ -62,8 +58,12 @@ class TaskList1 @Inject()(cc: ControllerComponents)
     }.getOrElse(Redirect(routes.TaskList1.login()))
   }
 
+  def validateLoginGet(username: String, password: String) = Action {
+    Ok(s"$username logged in with $password")
+  }
+
   // Actually does the authentication part, should be renamed `login`
-  def validatePost() = Action { request =>
+  def validatePost() = Action { implicit request =>
     // decoe it
     val postVals: Option[Map[String, Seq[String]]] =
       request.body.asFormUrlEncoded

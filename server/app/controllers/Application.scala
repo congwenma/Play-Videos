@@ -10,7 +10,7 @@ import play.api.i18n._
 class Application @Inject()(cc: ControllerComponents)
     extends AbstractController(cc) {
 
-  def index = Action {
+  def index = Action { implicit request =>
     Ok(views.html.index(SharedMessages.itWorks))
   }
 

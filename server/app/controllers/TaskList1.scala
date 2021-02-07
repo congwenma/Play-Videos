@@ -57,10 +57,12 @@ class TaskList1 @Inject()(cc: ControllerComponents)
           Redirect(routes.TaskList1.taskList).withSession("sess" -> username)
         } else
           Redirect(routes.TaskList1.login())
+            .flashing("error" -> "User already exists")
       }
     }.getOrElse(Redirect(routes.TaskList1.login()))
   }
 
+  // Actually does the authentication part, should be renamed `login`
   def validatePost() = Action { request =>
     // decoe it
     val postVals: Option[Map[String, Seq[String]]] =
@@ -76,6 +78,7 @@ class TaskList1 @Inject()(cc: ControllerComponents)
           Redirect(path).withSession("sess" -> username)
         } else {
           Redirect(routes.TaskList1.login())
+            .flashing("error" -> "Invalid username/password combination")
         }
 
       }
@@ -83,6 +86,7 @@ class TaskList1 @Inject()(cc: ControllerComponents)
 
   }
 
+  // Impersonates
   def loginAs(username: String) = Action {
     val passwordOpt: Option[String] = TaskListInMemoryModel.users.get(username)
     passwordOpt
@@ -93,6 +97,7 @@ class TaskList1 @Inject()(cc: ControllerComponents)
               .withSession("sess" -> username)
           } else {
             Redirect(routes.TaskList1.login())
+              .flashing("error" -> "Cannot impersonate!")
           }
         }
       }

@@ -1,4 +1,4 @@
-@(users: Seq[String], currentLoggedInUser: String)(implicit request: RequestHeader)
+@(users: Seq[String], currentLoggedInUser: String)(implicit request: RequestHeader, flash: Flash)
 
 
 @main("Login") {
@@ -32,6 +32,9 @@
 
   <h2>Admin login:</h2>
   <h3>Currently Logged in as: @currentLoggedInUser</h3>
+
+
+  <h2>Impersonate:</h2>
   <ul>
     @for(username <- users) {
       <a href="/loginAs/@username"><li>@username</li></a>

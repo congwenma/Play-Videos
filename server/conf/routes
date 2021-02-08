@@ -18,8 +18,10 @@ GET     /productRE/$prodType<[a-zA-Z]{2}\d*>/:prodNum     controllers.Applicatio
 
 
 
+GET     /tasklist          controllers.TaskList1.taskList
+POST    /tasklist/add-task  controllers.TaskList1.addTask()
+
 GET     /login              controllers.TaskList1.login
-GET     /tasklist1          controllers.TaskList1.taskList
 GET     /validateLoginGet     controllers.TaskList1.validateLoginGet(username, password)
 
 

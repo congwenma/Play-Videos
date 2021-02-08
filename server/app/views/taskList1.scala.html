@@ -1,4 +1,4 @@
-@(tasks: Seq[String], currentLoggedInUser: String)(implicit flash: Flash)
+@(tasks: Seq[String], currentLoggedInUser: String)(implicit request: RequestHeader, flash: Flash)
 
 
 @main("Task List") {
@@ -8,6 +8,13 @@
             <li>@task</li>
         }
     </ul>
+
+    <h2>Add ToDo</h2>
+    <form method="POST" action="/tasklist/add-task">
+        @helper.CSRF.formField
+        <input name="newTask"/>
+        <button>Submit</button>
+    </form>
 
     <h3>Currently Logged in as: @currentLoggedInUser</h3>
     <a href="/logout">Logout</a>

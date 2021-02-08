@@ -30,6 +30,27 @@ class TaskList1 @Inject()(cc: ControllerComponents)
 
   }
 
+  def addTask() = Action { implicit request =>
+    val formVals = request.body.asFormUrlEncoded
+    val usernameOpt: Option[String] = request.session.get("sess")
+
+    formVals
+      .map { args =>
+        usernameOpt
+          .map { username =>
+            println(
+              s"*** username: $username, newTask: ${args("newTask").head}")
+            TaskListInMemoryModel.addTask(username, args("newTask").head)
+
+            val tasks = TaskListInMemoryModel.getTasks(username)
+            Ok(views.html.taskList1(tasks,
+                                    currentLoggedInUserFromRequest(request)))
+          }
+          .getOrElse(Redirect((routes.TaskList1.login())))
+      }
+      .getOrElse(Redirect(routes.TaskList1.taskList()))
+  }
+
   //  The `implicit` helps the XSRF token in `login.scala.html`
   def login = Action { implicit request =>
     val users = TaskListInMemoryModel.users.keys.toSeq;

@@ -8,9 +8,21 @@ import play.api.mvc.{
   ControllerComponents,
   Request
 }
+import play.api.data._
+import play.api.data.Forms._
+
+case class LoginData(username: String, password: String)
+
 @Singleton
 class TaskList1 @Inject()(cc: ControllerComponents)
     extends AbstractController(cc) {
+
+  // TODO: NOT Using play form, use https://www.innoq.com/en/blog/validate-your-domain-in-scala/ with unit tests when time allows
+//  val loginForm: Form[LoginData] = Form(
+//    mapping(
+//      "Username" -> text(3, 10), // 3 to 10 characters long
+//      "Password" -> text(3, 10)
+//    )(LoginData.apply)(LoginData.unapply))
 
   private def currentLoggedInUserFromRequest(
       request: Request[AnyContent]): String =

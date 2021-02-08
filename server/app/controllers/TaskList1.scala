@@ -42,9 +42,27 @@ class TaskList1 @Inject()(cc: ControllerComponents)
               s"*** username: $username, newTask: ${args("newTask").head}")
             TaskListInMemoryModel.addTask(username, args("newTask").head)
 
-            val tasks = TaskListInMemoryModel.getTasks(username)
-            Ok(views.html.taskList1(tasks,
-                                    currentLoggedInUserFromRequest(request)))
+            Redirect(routes.TaskList1.taskList())
+          }
+          .getOrElse(Redirect((routes.TaskList1.login())))
+      }
+      .getOrElse(Redirect(routes.TaskList1.taskList()))
+  }
+
+  def deleteTask() = Action { implicit request =>
+    val formVals = request.body.asFormUrlEncoded
+    val usernameOpt: Option[String] = request.session.get("sess")
+
+    formVals
+      .map { args =>
+        usernameOpt
+          .map { username =>
+            println(
+              s"*** username: $username, newTask: ${args("taskTobeDeleted").head}")
+            TaskListInMemoryModel.removeTask(username,
+                                             args("taskTobeDeleted").head)
+
+            Redirect(routes.TaskList1.taskList())
           }
           .getOrElse(Redirect((routes.TaskList1.login())))
       }

@@ -34,5 +34,10 @@ object TaskListInMemoryModel {
     tasks(username) = task :: tasks.get(username).getOrElse(Nil)
   }
 
-  def removeTask(username: String, index: Int): Boolean = ???
+  def removeTask(username: String, task: String): Boolean = {
+    val taskList: List[String] = tasks.get(username).getOrElse(List[String]())
+    val newList = taskList.filter(_ != task)
+    tasks(username) = newList
+    return true
+  }
 }

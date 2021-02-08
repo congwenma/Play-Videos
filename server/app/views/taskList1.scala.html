@@ -5,7 +5,14 @@
     <h2>Task List</h2>
     <ul>
         @for(task <- tasks) {
-            <li>@task</li>
+            <li>
+                @task
+                <form method="POST" action="/tasklist/delete-task">
+                    @helper.CSRF.formField
+                    <input type="hidden" name="taskTobeDeleted" value="@task"/>
+                    <button>Delete</button>
+                </form>
+            </li>
         }
     </ul>
 

@@ -19,5 +19,24 @@ class TaskListInMemoryModelSpec extends PlaySpec {
     "get correct default tasks" in {
       TaskListInMemoryModel.getTasks("abc") mustBe (List("Make Videos", "Eat", "Code"))
     }
+
+    "create new user with no tasks" in {
+      TaskListInMemoryModel.createUser("newuser", "test") mustBe (true)
+      TaskListInMemoryModel.getTasks("newuser") mustBe (Nil)
+    }
+
+    "create new user with existing name" in {
+      TaskListInMemoryModel.createUser("abc", "testtesttest") mustBe (false)
+    }
+
+    "add new task for default user" in {
+      TaskListInMemoryModel.addTask("abc", "testing")
+      TaskListInMemoryModel.getTasks("abc") must contain("testing")
+    }
+
+    "remove task from default user" in {
+      TaskListInMemoryModel.removeTask("abc", "Make Videos")
+      TaskListInMemoryModel.getTasks("abc") must not contain "Make Videos"
+    }
   }
 }

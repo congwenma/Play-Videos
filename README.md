@@ -2,6 +2,7 @@
 
 https://www.youtube.com/playlist?list=PLLMXbkbDbVt8tBiGc1y69BZdG8at1D7ZF
 
+Skipping 22-24, e2e framework not working
 # Notes
 
 - on `sbt >`, `run` does the trick of `web/run`

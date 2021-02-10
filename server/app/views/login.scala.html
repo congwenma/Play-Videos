@@ -14,8 +14,8 @@
   <h2>Login w/ POST</h2>
   <form method="POST" action="validatePost">
     @helper.CSRF.formField
-    Username: <input name="username"/>
-    Password: <input type="password" name="password"/>
+    Username: <input name="username" id="username-login"/>
+    Password: <input type="password" name="password" id="password-login"/>
 
     <button>Submit</button>
   </form>

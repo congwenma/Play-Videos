@@ -17,27 +17,22 @@ GET     /productRE/$prodType<[a-zA-Z]{2}\d*>/:prodNum     controllers.Applicatio
 
 
 
-
+# Boring MVC
 GET     /tasklist          controllers.TaskList1.taskList
 POST    /tasklist/add-task  controllers.TaskList1.addTask()
 POST    /tasklist/delete-task controllers.TaskList1.deleteTask()
-
 GET     /login              controllers.TaskList1.login
 GET     /validateLoginGet     controllers.TaskList1.validateLoginGet(username, password)
-
-
 POST    /validatePost     controllers.TaskList1.validatePost
-
 POST    /createUser     controllers.TaskList1.createUser
-
 GET    /loginAs/:username     controllers.TaskList1.loginAs(username)
-
 GET     /logout             controllers.TaskList1.logout
 
-
-
-
-
+# Skippking 2 - jquery
+# Straight to ver. 3 - JSON
+GET   /v3/index         controllers.TaskList3.index
+POST   /v3/validate         controllers.TaskList3.validate
+GET   /v3/tasklist         controllers.TaskList3.tasklist
 
 
 

@@ -34,7 +34,9 @@ GET   /v3/index         controllers.TaskList3.index
 POST   /v3/validate         controllers.TaskList3.validate
 GET   /v3/tasklist         controllers.TaskList3.tasklist
 
-
+# Websocket chat
+GET /chat    controllers.WebSocketChat.index
+GET /chatSocket     controllers.WebSocketChat.socket
 
 # Prefix must match `play.assets.urlPrefix`
 GET        /assets/*file                 controllers.Assets.at(file)

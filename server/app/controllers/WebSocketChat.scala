@@ -1,7 +1,7 @@
 package controllers
 
-import actors.ChatActor
-import akka.actor.{ActorRef, ActorSystem}
+import actors.{ChatActor, ChatManager}
+import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.stream.Materializer
 
 import javax.inject._
@@ -16,6 +16,10 @@ class WebSocketChat @Inject()(cc: ControllerComponents)
 // NOTE: Uses Akka actors, and `Materializer` to use with `AkkaStreams`
 (implicit system: ActorSystem, mat: Materializer)
     extends AbstractController(cc) {
+
+  // NOTE: this is why we use system, so we can call actorOf
+  var manager = system.actorOf(Props[ChatManager], "Manager")
+
   def index =
     Action { implicit request =>
       Ok(views.html.chatPage())
@@ -26,7 +30,7 @@ class WebSocketChat @Inject()(cc: ControllerComponents)
     WebSocket.accept[String, String] { request =>
       println("*** Getting socket")
       ActorFlow.actorRef { (out: ActorRef) =>
-        ChatActor.props(out)
+        ChatActor.props(out, manager)
       }
     }
 }

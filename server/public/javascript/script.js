@@ -11,5 +11,22 @@ const chatArea = document.querySelector('#chat-area')
 const route = "ws://localhost:9000/chatSocket"
 const socket = new WebSocket(route)
 socket.onopen = function(e) {
-  socket.send("text message")
+  socket.send("New user connected.")
 };
+
+
+const sendsEvent = () => {
+  socket.send(inputField.value)
+  inputField.value = '';
+}
+
+inputField.onkeydown = event => {
+  if(event.key === 'Enter') {
+    sendsEvent()
+  }
+}
+
+
+socket.onmessage = event => {
+  chatArea.value += `\n${event.data}`
+}

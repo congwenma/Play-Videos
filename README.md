@@ -3,6 +3,11 @@
 https://www.youtube.com/playlist?list=PLLMXbkbDbVt8tBiGc1y69BZdG8at1D7ZF
 
 Skipping 22-24, e2e framework not working
+Skipping Jquery, React (not using any scala asset pipeline in this tutorial).
+
+# Start the app
+Seems to require manually running the files in `./sql` directory.
+
 # Notes
 
 - on `sbt >`, `run` does the trick of `web/run`
@@ -20,9 +25,6 @@ Skipping 22-24, e2e framework not working
     POST    /validatePost     controllers.TaskList1.validatePost
     ```
 
-    
-
-
 
 
 
@@ -31,3 +33,5 @@ Skipping 22-24, e2e framework not working
 
 
 - To use CSRF, we need to `implicit request` in the view, which removes need to pass `request` to `view`.
+
+

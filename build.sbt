@@ -11,7 +11,20 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
     "com.vmunier" %% "scalajs-scripts" % "1.1.2",
     guice,
     "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
-    specs2 % Test
+    specs2 % Test,
+
+    //    `Slick` - Database binding for connecting to JDBC
+    "com.typesafe.play" %% "play-slick" % "5.0.0",
+    //
+    "com.typesafe.slick" %% "slick-codegen" % "3.3.2",
+    //
+    "com.typesafe.play" %% "play-json" % "2.8.1",
+    // database driver
+    "org.postgresql" % "postgresql" % "42.2.11",
+    // Manager for database connection, not sure if we need it, new slick version have it in dependency, w/e
+    "com.typesafe.slick" %% "slick-hikaricp" % "3.3.2",
+    // Password hash
+    "org.mindrot" % "jbcrypt" % "0.4"
   ),
   // Compile the project before generating Eclipse files, so that generated .scala or .class files for views and routes are present
   EclipseKeys.preTasks := Seq(compile in Compile)

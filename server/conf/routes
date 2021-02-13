@@ -38,6 +38,8 @@ GET   /v3/tasklist         controllers.TaskList3.tasklist
 GET /chat    controllers.WebSocketChat.index
 GET /chatSocket     controllers.WebSocketChat.socket
 
+
+
 # Prefix must match `play.assets.urlPrefix`
 GET        /assets/*file                 controllers.Assets.at(file)
 GET        /versionedAssets/*file        controllers.Assets.versioned(path="/public", file: Asset)

@@ -38,8 +38,17 @@ GET   /v3/tasklist         controllers.TaskList3.tasklist
 GET /chat    controllers.WebSocketChat.index
 GET /chatSocket     controllers.WebSocketChat.socket
 
-
+# Skipping 4, go to 5
+GET /v5/index   controllers.TaskList5.index
+GET /v5/validate   controllers.TaskList5.validate
+GET /v5/createuser   controllers.TaskList5.createUser
+GET /v5/tasklist   controllers.TaskList5.taskList
+GET /v5/addTask   controllers.TaskList5.addTask
+GET /v5/deleteTask   controllers.TaskList5.deleteTask
+GET /v5/logout   controllers.TaskList5.logout
 
 # Prefix must match `play.assets.urlPrefix`
+
+
 GET        /assets/*file                 controllers.Assets.at(file)
 GET        /versionedAssets/*file        controllers.Assets.versioned(path="/public", file: Asset)

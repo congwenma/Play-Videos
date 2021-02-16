@@ -52,24 +52,47 @@
       request
     }
 
-    const handleCreateTask = (event) => {
+    const handleLogin = async (event) => {
       event.preventDefault();
       const formValues = window.utils.getValuesFromForm(event.target)
-      request('/v5/addtask', { method: 'POST', body: formValues })
+      await request('/v5/validate', { method: 'POST', body: formValues })
+
+      window.location.reload()
     }
 
-    const handleCreateUser = (event) => {
+    const handleCreateTask = async (event) => {
       event.preventDefault();
       const formValues = window.utils.getValuesFromForm(event.target)
-      request('/v5/createuser', { method: 'POST', body: formValues })
+      await request('/v5/addtask', { method: 'POST', body: formValues })
+
+      await refreshTaskList();
+    }
+
+    const handleCreateUser = async (event) => {
+      event.preventDefault();
+      const formValues = window.utils.getValuesFromForm(event.target)
+      await request('/v5/createuser', { method: 'POST', body: formValues })
+      window.location.reload()
     }
 
     const tasklist = document.querySelector('.tasklist')
-    fetch('/v5/tasklist').then(tasks =>
-      tasks.json().then(tasksJson =>
-        tasklist.innerHTML = tasksJson
+
+    const deleteTask = async task => {
+      const grabWeCsrfToken = document.querySelector('input[name=csrfToken]').value
+      await request('/v5/deletetask', { method: 'DELETE', body: { csrfToken: grabWeCsrfToken, text: task } });
+
+      await refreshTaskList()
+    }
+
+    const refreshTaskList = () =>
+      fetch('/v5/tasklist').then(tasks =>
+        tasks.json().then(tasksJson => {
+          tasklist.innerHTML = tasksJson.map(taskJson =>
+            `<li>${taskJson} <button onclick="deleteTask('${taskJson}')">Delete</button></li>`
+          ).join('')
+        })
       )
-    )
-   </script>
+    refreshTaskList()
+  </script>
 
 }

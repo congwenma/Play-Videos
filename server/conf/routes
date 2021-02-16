@@ -39,13 +39,13 @@ GET /chat    controllers.WebSocketChat.index
 GET /chatSocket     controllers.WebSocketChat.socket
 
 # Skipping 4, go to 5
-GET /v5/index   controllers.TaskList5.index
-POST /v5/validate   controllers.TaskList5.validate
-POST /v5/createuser   controllers.TaskList5.createUser
-GET /v5/tasklist   controllers.TaskList5.taskList
-POST /v5/addtask   controllers.TaskList5.addTask
-DELETE /v5/deleteTask   controllers.TaskList5.deleteTask
-GET /v5/logout   controllers.TaskList5.logout
+GET    /v5/index      controllers.TaskList5.index
+POST   /v5/validate   controllers.TaskList5.validate
+POST   /v5/createuser controllers.TaskList5.createUser
+GET    /v5/tasklist   controllers.TaskList5.taskList
+POST   /v5/addtask    controllers.TaskList5.addTask
+DELETE /v5/deletetask controllers.TaskList5.deleteTask
+GET    /v5/logout     controllers.TaskList5.logout
 
 # Prefix must match `play.assets.urlPrefix`
 

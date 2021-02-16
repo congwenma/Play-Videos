@@ -21,7 +21,7 @@ import slick.jdbc.PostgresProfile.api._
 // NOTE: also need execution context.
 // NOTE: `HasDatabaseConfigProvider[JdbcProfile]` provides us with a variable called `db`, we can use it to refer to Database.
 @Singleton
-class TaskList5 @Inject()(
+class TaskList5 @Inject() (
     protected val dbConfigProvider: DatabaseConfigProvider,
     cc: ControllerComponents
 )(implicit ec: ExecutionContext)
@@ -31,7 +31,8 @@ class TaskList5 @Inject()(
   private val model = new TaskListDatabaseModel(db)
 
   private def currentLoggedInUserFromRequest(
-      request: Request[AnyContent]): String =
+      request: Request[AnyContent]
+  ): String =
     request.session.get("username").getOrElse("")
 
   def index =
@@ -100,7 +101,8 @@ class TaskList5 @Inject()(
   def createUser =
     Action.async { implicit request =>
       withJsonBody[UserData] { ud =>
-        model.createUser(ud.username, ud.password).map { ouserId =>
+        model.createUser(ud.username, ud.password).map { ouserId: Option[Int] =>
+          println(s"***ouserId: $ouserId, ${ud.username}")
           ouserId match {
             case Some(userId) =>
               Ok(Json.toJson(true)).withSession(
@@ -108,7 +110,8 @@ class TaskList5 @Inject()(
                 "userId" -> userId.toString,
                 "csrfToken" -> play.filters.csrf.CSRF.getToken
                   .map(_.value)
-                  .getOrElse(("")))
+                  .getOrElse((""))
+              )
             case None =>
               Ok(Json.toJson(false))
           }
@@ -139,15 +142,17 @@ class TaskList5 @Inject()(
     }
   }
 
-  def deleteTask = TODO
-//    Action.async { implicit request =>
-//      withSessionUserId { username =>
-//        withJsonBody[Int] { index =>
-//          model.removeTask(username, index)
-//          Ok(Json.toJson(true))
-//        }
-//      }
-//    }
+  def deleteTask =
+    Action.async { implicit request =>
+      withSessionUserId { userId =>
+        withJsonBody[TaskItem] { taskItem =>
+          model
+            .removeTask(userId, taskItem.text)
+            .map(removed => Ok(Json.toJson(true)))
+
+        }
+      }
+    }
 
   def logout =
     Action { implicit request =>

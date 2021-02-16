@@ -24,7 +24,8 @@ class TaskListDatabaseModel(db: Database)(implicit ec: ExecutionContext) {
       userRows.headOption.flatMap { userRow =>
         if (BCrypt.checkpw(password, userRow.password)) Some(userRow.id)
         else None
-    })
+      }
+    )
   }
 
   def createUser(username: String, password: String): Future[Option[Int]] = {
@@ -37,19 +38,25 @@ class TaskListDatabaseModel(db: Database)(implicit ec: ExecutionContext) {
       userRows.isEmpty match {
         case true =>
           db.run(
-              Users += UsersRow(-1,
-                                username,
-                                BCrypt.hashpw(password, BCrypt.gensalt())))
+              Users += UsersRow(
+                -1,
+                username,
+                BCrypt.hashpw(password, BCrypt.gensalt())
+              )
+            )
             .flatMap(numberOfPeopleAdded =>
+              // NOTE: renamed from original code's `addCount`
               (numberOfPeopleAdded > 0) match {
                 case true =>
                   db.run(
                       Users
                         .filter(userRow => userRow.username === username)
-                        .result)
+                        .result
+                    )
                     .map(_.headOption.map(_.id))
                 case false => Future.successful(None)
-            })
+              }
+            )
 
         case false => Future.successful(None)
       }
@@ -77,7 +84,7 @@ class TaskListDatabaseModel(db: Database)(implicit ec: ExecutionContext) {
     db.run(Items += ItemsRow(-1, userId, taskText))
   }
 
-  def removeTask(username: String, task: String): Future[Boolean] = {
-    ???
+  def removeTask(userId: Int, itemText: String): Future[Boolean] = {
+    db.run(Items.filter(_.text === itemText).delete).map(count => count > 0)
   }
 }

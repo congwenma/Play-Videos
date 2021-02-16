@@ -6,7 +6,13 @@ Skipping 22-24, e2e framework not working
 Skipping Jquery, React (not using any scala asset pipeline in this tutorial).
 
 # Start the app
-Seems to require manually running the files in `./sql` directory.
+Seems to require manually running the files in `./sql` directory. Make sure to run the table create queries as the `playvideos` user
+
+> psql tasklist -U playvideos
+
+
+
+For the purpose of using time efficiently, skip v1-v3, and go to `http://localhost:9000/v5/index`
 
 # Notes
 
@@ -28,10 +34,10 @@ Seems to require manually running the files in `./sql` directory.
 
 
 
+
 - To escape `Option[]`, use `.map`
 
 
 
 - To use CSRF, we need to `implicit request` in the view, which removes need to pass `request` to `view`.
-
 

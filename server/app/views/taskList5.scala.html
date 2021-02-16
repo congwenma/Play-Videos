@@ -1,0 +1,28 @@
+@(tasks: Seq[String], currentLoggedInUser: String)(implicit request: RequestHeader, flash: Flash)
+
+
+@main("Task List") {
+    <h2>Task List</h2>
+    <ul>
+        @for(task <- tasks) {
+            <li>
+                @task
+                <form method="POST" action="/tasklist/delete-task">
+                    @helper.CSRF.formField
+                    <input type="hidden" name="taskTobeDeleted" value="@task"/>
+                    <button>Delete</button>
+                </form>
+            </li>
+        }
+    </ul>
+
+    <h2>Add ToDo</h2>
+    <form method="POST" action="/tasklist/add-task">
+        @helper.CSRF.formField
+        <input name="newTask"/>
+        <button>Submit</button>
+    </form>
+
+    <h3>Currently Logged in as: @currentLoggedInUser</h3>
+    <a href="/logout">Logout</a>
+}

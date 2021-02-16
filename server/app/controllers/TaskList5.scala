@@ -30,18 +30,24 @@ class TaskList5 @Inject()(
 
   private val model = new TaskListDatabaseModel(db)
 
+  private def currentLoggedInUserFromRequest(
+      request: Request[AnyContent]): String =
+    request.session.get("username").getOrElse("")
+
   def index =
     Action { implicit request =>
-      Ok(views.html.index_v5())
+      Ok(views.html.index_v5(currentLoggedInUserFromRequest(request)))
     }
 
   implicit val userDataReads = Json.reads[UserData]
+  implicit val taskItemReads = Json.reads[TaskItem]
 
   def withJsonBody[A](
       f: A => Future[Result]
   )(implicit request: Request[AnyContent], reads: Reads[A]): Future[Result] = {
     request.body.asJson
       .map { body =>
+        println(s"withJSONBody: $body")
         Json.fromJson[A](body) match {
           case JsSuccess(a, path) => f(a)
           case e @ JsError(_) =>
@@ -60,67 +66,82 @@ class TaskList5 @Inject()(
       .getOrElse(Future.successful(Ok(Json.toJson(Seq.empty[String]))))
   }
 
+  def withSessionUserId(
+      f: Int => Future[Result]
+  )(implicit request: Request[AnyContent]): Future[Result] = {
+    request.session
+      .get("userId")
+      .map(userId => f(userId.toInt))
+      .getOrElse(Future.successful(Ok(Json.toJson(Seq.empty[String]))))
+  }
+
   def validate =
     Action.async { implicit request =>
       withJsonBody[UserData] { ud =>
         model.validateUser(ud.username, ud.password).map { userExists =>
-          if (userExists) {
-            Ok(Json.toJson(true))
-              .withSession(
-                "username" -> ud.username,
-                "csrfToken" -> play.filters.csrf.CSRF.getToken
-                  .map(_.value)
-                  .getOrElse("")
-              )
-          } else {
-            Ok(Json.toJson(false))
+          userExists match {
+            case Some(userId) =>
+              Ok(Json.toJson(true))
+                .withSession(
+                  "username" -> ud.username,
+                  "userId" -> userId.toString(),
+                  "csrfToken" -> play.filters.csrf.CSRF.getToken
+                    .map(_.value)
+                    .getOrElse("")
+                )
+            case None =>
+              Ok(Json.toJson(false))
           }
         }
 
       }
     }
 
-  def createUser = TODO
-//  def createUser =
-//    Action.async { implicit request =>
-//      withJsonBody[UserData] { ud =>
-//        model.createUser(ud.username, ud.password).map { ouserId =>
-//          ouserId match {
-//            case Some(userId) =>
-//              Ok(Json.toJson(true)).withSession(
-//                "username" -> ud.username,
-//                "userid" -> userId.toString,
-//                "csrfToken" -> play.filters.csrf.CSRF.getToken
-//                  .map(_.value)
-//                  .getOrElse(("")))
-//            case None =>
-//              Ok(Json.toJson(false))
-//          }
-//        }
-//
-//      }
-//    }
-
-  def taskList = TODO
-//    Action.async { implicit request =>
-//      withSessionUsername { username =>
-//        Future.successful(Ok(Json.toJson(model.getTasks(username))))
-//      }
-//    }
-
-  def addTask =
+  def createUser =
     Action.async { implicit request =>
-      withSessionUsername { username =>
-        withJsonBody[String] { task =>
-          model.addTask(username, task);
-          Future.successful(Ok(Json.toJson(true)))
+      withJsonBody[UserData] { ud =>
+        model.createUser(ud.username, ud.password).map { ouserId =>
+          ouserId match {
+            case Some(userId) =>
+              Ok(Json.toJson(true)).withSession(
+                "username" -> ud.username,
+                "userId" -> userId.toString,
+                "csrfToken" -> play.filters.csrf.CSRF.getToken
+                  .map(_.value)
+                  .getOrElse(("")))
+            case None =>
+              Ok(Json.toJson(false))
+          }
         }
       }
     }
 
+  def taskList =
+    Action.async { implicit request =>
+      withSessionUserId { userId =>
+        model.getTasks(userId).map(tasks => Ok(Json.toJson(tasks)))
+      }
+    }
+
+  def addTask = {
+    Action.async { implicit request =>
+      withSessionUserId { userId =>
+        withJsonBody[TaskItem] { taskitem =>
+//          println(s"*** task: $taskitem")
+          model
+            .addTask(userId, taskitem.text)
+            .map(count => {
+              Ok(Json.toJson(count > 0))
+            })
+
+        }
+      }
+    }
+  }
+
   def deleteTask = TODO
 //    Action.async { implicit request =>
-//      withSessionUsername { username =>
+//      withSessionUserId { username =>
 //        withJsonBody[Int] { index =>
 //          model.removeTask(username, index)
 //          Ok(Json.toJson(true))

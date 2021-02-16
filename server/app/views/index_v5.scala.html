@@ -1,5 +1,75 @@
-@()(implicit flash: Flash)
+@(currentLoggedInUser: String)(implicit flash: Flash, request: RequestHeader)
 
-@main("Play with Scala.jsd") {
+</ul>
+@main("Play with Scala.js") {
+
+  <h2>Login</h2>
+  <form method="POST" onsubmit="handleLogin(event)">
+    @helper.CSRF.formField
+    Username: <input name="username" id="username-login"/>
+    Password: <input type="password" name="password" id="password-login"/>
+
+    <button>Submit</button>
+  </form>
+
+  <h2>Create User</h2>
+  <form method="POST" onsubmit="handleCreateUser(event)">
+    @helper.CSRF.formField
+    Username: <input name="username"/>
+    Password: <input type="password" name="password"/>
+
+    <button>Submit</button>
+  </form>
+
+  <h3>Currently Logged in as --> @currentLoggedInUser </h3>
+
+  <h1>Task List</h1>
+  <ul class="tasklist"></ul>
+
+  <h2>Add Task</h2>
+  <form onsubmit="handleCreateTask(event)">
+    @helper.CSRF.formField
+    Task: <input name="text"/>
+
+    <button>Create</button>
+  </form>
+
+  <script>
+    // Utility fns
+    const getValuesFromForm = form => Object.fromEntries([...form.elements].filter(node => node.nodeName === 'INPUT').map(node => [node.name, node.value]))
+
+    const request = (url, { method = 'GET', body } = {} ) => fetch(url, {
+          method: method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Csrf-Token': body.csrfToken
+          },
+          body: JSON.stringify(body)
+        })
+
+    window.utils = {
+      getValuesFromForm,
+      request
+    }
+
+    const handleCreateTask = (event) => {
+      event.preventDefault();
+      const formValues = window.utils.getValuesFromForm(event.target)
+      request('/v5/addtask', { method: 'POST', body: formValues })
+    }
+
+    const handleCreateUser = (event) => {
+      event.preventDefault();
+      const formValues = window.utils.getValuesFromForm(event.target)
+      request('/v5/createuser', { method: 'POST', body: formValues })
+    }
+
+    const tasklist = document.querySelector('.tasklist')
+    fetch('/v5/tasklist').then(tasks =>
+      tasks.json().then(tasksJson =>
+        tasklist.innerHTML = tasksJson
+      )
+    )
+   </script>
 
 }

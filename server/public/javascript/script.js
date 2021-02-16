@@ -20,7 +20,7 @@ const sendsEvent = () => {
   inputField.value = '';
 }
 
-inputField.onkeydown = event => {
+inputField?.onkeydown = event => {
   if(event.key === 'Enter') {
     sendsEvent()
   }
